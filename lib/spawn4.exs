@@ -1,16 +1,15 @@
-defmodule Spawn3 do
-
+defmodule Spawn4 do  
     def greet do
         receive do
             {sender, msg} ->
                 send sender, {:ok, "Hello, #{msg}"}
+                greet()
         end
     end
-
 end
 
 #here's a client
-pid = spawn(Spawn3, :greet, [])
+pid = spawn(Spawn4, :greet, [])
 send pid, {self(), "World!"}
 receive do
     {:ok, message} ->
@@ -21,7 +20,9 @@ send pid, {self(), "Kermit!"}
 receive do
     {:ok, message} ->
         IO.puts message
-    #After 500 miliseconds, do this function
     after 500 ->
-        IO.puts "The greet function is gone away"
+        IO.puts "The greet function has gone away"
 end
+
+
+
